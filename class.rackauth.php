@@ -17,19 +17,26 @@ class RackAuth
     private $XAuthToken;
     private $XCDNManagementUrl;
     private $XServerManagementUrl;
+    private $AuthURL;
     
     public function __construct($Username, $APIKey)
     {
         $this->Username=$Username;
         $this->APIKey= $APIKey;
+        $this->AuthUrl= "https://auth.api.rackspacecloud.com/v1.0"; //set default to US
     }
+
+    public function setAuthUrl($url) {
+        $this->AuthUrl = $url;
+    }
+
     public function auth()
     {
 
         if(!$this->Username || !$this->APIKey)
         throw new Exception('Username or Password cannot be empty');
 
-        $Response = Request::post("https://auth.api.rackspacecloud.com/v1.0",array("X-Auth-User"=>$this->Username, "X-Auth-Key"=>$this->APIKey),null,true);
+        $Response = Request::post($this->AuthUrl,array("X-Auth-User"=>$this->Username, "X-Auth-Key"=>$this->APIKey),null,true);
         $Headers = Request::parseHeaders($Response);
         //print_r($Headers);
         if($Headers)

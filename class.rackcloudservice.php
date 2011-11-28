@@ -69,6 +69,23 @@ class RackCloudService
         return $Response;
     }
 
+    public function createServerPersonality($ServerName, $ImageId, $FlavorId=1, $MetaData, $Personality)
+    {
+        $Request = array("server"=>array("name"=>$ServerName,
+        "imageId"=>$ImageId,
+        "flavorId"=>$FlavorId,
+        "metadata"=>$MetaData,
+	"personality"=>$Personality,
+	)
+	);
+        $JsonRequest = json_encode($Request);
+	//return $JsonRequest;
+        $JsonResponse = Request::postAuthenticatedRequest("servers",$this->RackAuth,$JsonRequest);
+        $Response = json_decode($JsonResponse);
+        return $Response;
+    }
+
+
     /**
      * list currently available servers in your cloud server account. please note that
      * deleted servers will not be returned. 
