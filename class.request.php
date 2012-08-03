@@ -32,7 +32,9 @@ class Request
             return false;
         }
 
-        if($Headers){
+        curl_setopt($c,CURLOPT_ENCODING , "gzip");
+
+	if($Headers){
             $_headers = array();
             foreach ($Headers as $key=>$value)
             {

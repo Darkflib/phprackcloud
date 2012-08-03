@@ -45,6 +45,6 @@ include_once("class.rackcloudservice.php");
 include_once("class.rackcloudserver.php");
 include_once("class.rackcloudflavor.php");
 include_once("class.rackcloudimage.php");
-include_once("class.rackcloudbackup.php");
-include_once("class.rackcloudsharedipgroups.php");
+//include_once("class.rackcloudbackup.php");
+//include_once("class.rackcloudsharedipgroups.php");
 ?>

@@ -40,12 +40,13 @@ class RackAuth
 	$post=array('auth' => array('RAX-KSKEY:apiKeyCredentials' => array('username' => $this->Username, 'apiKey' => $this->APIKey )));
 	if (isset($this->TenantID)) $post['auth']['tenantID']=$this->TenantID;
 	$post=(json_encode($post));
-	print_r($post);
+	//print_r($post);
 	echo "\n\n";
 
         $Response = Request::post($this->AuthUrl.'/tokens',array('Content-Type' => 'application/json', 'Accept' => 'application/json'),$post,true);
         list($headers,$data) = explode("\r\n\r\n",$Response);
-        //print_r($Headers);
+        //print_r($headers);
+	//print_r($data);
 	$data=json_decode($data,true);
         if($data['access'])
         {
@@ -56,74 +57,45 @@ class RackAuth
 	return false;
     }
 
-    function getXAuthToken()
+    public function getToken()
     {
-        return $this->XAuthToken;
+        return $this->Token;
     }
 
-    function setXAuthToken($AuthToken)
-    {
-        $this->XAuthToken=$AuthToken;
-    }
-
-    function getXStorageUrl()
-    {
-        return $this->XStorageUrl;
-    }
-    function setXStorageUrl($Url)
-    {
-        $this->XStorageUrl = $Url;
-    }
-
-    function getXStorageToken()
-    {
-        return $this->XStorageToken;
-    }
-
-    function setXStorageToken($Url)
-    {
-        $this->XStorageToken=$Url;
-    }
-
-    function getXCDNManagementUrl()
-    {
-        return $this->XCDNManagementUrl;
-    }
-    
-    function setXCDNManagementUrl($Url)
-    {
-        $this->XCDNManagementUrl=$Url;
-    }
-
-    function getXServerManagementUrl()
-    {
-        return $this->XServerManagementUrl;
-    }
-    
-    function setXServerManagementUrl($Url)
-    {
-        $this->XServerManagementUrl=$Url;
-    }
-
-    function getUsername()
+    public function getUsername()
     {
         return $this->Username;
     }
     
-    function setUsername($Username)
+    public function setUsername($Username)
     {
         $this->Username=$Username;
     }
 
-    function getAPIKey()
+    public function getAPIKey()
     {
         return $this->APIKey;
     }
     
-    function setAPIKey($APIKey)
+    public function setAPIKey($APIKey)
     {
         $this->APIKey=$APIKey;
     }
+
+    public function getTenantID(){
+        return $this->TenantID;
+    }
+
+    public function setTenantID($TenantID)
+    {
+        $this->TenantID=$TenantID;
+    }
+
+    public function getServiceCatalog(){
+        return $this->ServiceCatalog;
+    }
+
+
 }
 
 ?>
