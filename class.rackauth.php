@@ -2,11 +2,14 @@
 /**
  * RackSpace Cloud Authentication Manager
  * 
- * @author : Leevio Team (www.leevio.com)
+ * @author : Mike Preston (www.sysdom.com) based on original code from Leevo. 
  * @copyright : New BSD License
- * @since : Oct 12, 2009
- * @version : 1.0
+ * @since : Aug 03, 2012
+ * @version : 2.0
  */
+
+//Todo: Add password auth to allow subusers to be used.
+
 class RackAuth
 {
 
@@ -52,6 +55,7 @@ class RackAuth
         {
             $this->Token = $data['access']['token'];
             $this->ServiceCatalog = $data['access']['serviceCatalog'];
+            $this->TenantID = $data['access']['token']['tenant']['id'];
             return true;
         }
 	return false;
@@ -60,6 +64,12 @@ class RackAuth
     public function getToken()
     {
         return $this->Token;
+    }
+
+
+    public function setToken($Token)
+    {
+        $this->Token = $Token;
     }
 
     public function getUsername()
@@ -95,6 +105,19 @@ class RackAuth
         return $this->ServiceCatalog;
     }
 
+    public function getEndpoint($region='ORD', $type='compute', $version=2){
+      $catalog=$this->getServiceCatalog();
+      foreach ($catalog as $service) {
+        if ($service['type']!=$type) continue; // filter out by type
+        foreach ($service['endpoints'] as $endpoint) {
+          if (isset($endpoint['versionId']) && ($endpoint['versionId']!=$version)) continue;
+          else if (isset($endpoint['region']) && ($endpoint['region']!=$region)) continue;
+          else if ($type='compute' and $version=1.0) return $endpoint;
+          else return $endpoint;
+        }
+      }
+      return false;
+    }
 
 }
 

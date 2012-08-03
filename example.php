@@ -1,8 +1,37 @@
 <?php
 include_once("class.rackcloudmanager.php");
-$Auth = new RackAuth("<Username>","<ApiKey>");
-$Auth->auth();
+$Auth = new RackAuth("user","37837487348738478374873482044ea4"); //US
+//$Auth = new RackAuth("user","93849324924444443942394293429342"); //UK
+//$Auth->setAuthUrl('https://lon.identity.api.rackspacecloud.com/v2.0');
 
+echo ($Auth->auth()?"Auth'd\n":"Auth Failure\n");
+
+print_r($Auth->getToken());
+
+//print_r($Auth->getServiceCatalog());
+
+echo "ORD-compute-1\n";
+print_r($Auth->getEndpoint('ORD','compute','1.0'));
+echo "DFW-compute-2\n";
+print_r($Auth->getEndpoint('DFW','compute','2'));
+echo "ORD-compute-2\n";
+print_r($Auth->getEndpoint('ORD','compute','2'));
+echo "DFW-object-2\n";
+print_r($Auth->getEndpoint('DFW','object-store','2'));
+echo "DFW-mon-2\n";
+print_r($Auth->getEndpoint('DFW','rax:monitor','2'));
+echo "DFW-lb-2\n";
+print_r($Auth->getEndpoint('DFW','rax:load-balancer','2'));
+
+echo "ORD-object-2\n";
+print_r($Auth->getEndpoint('ORD','object-store','2'));
+echo "ORD-mon-2\n";
+print_r($Auth->getEndpoint('ORD','rax:monitor','2'));
+echo "ORD-lb-2\n";
+print_r($Auth->getEndpoint('ORD','rax:load-balancer','2'));
+
+
+/*
 echo "<pre>";
 $RCS = new RackCloudService($Auth);
 $Limits = $RCS->getLimits();
@@ -44,4 +73,5 @@ $RI = new RackCloudImage($Auth);
 
 $RB = new RackCloudBackup();
 $RB->
+*/
 ?>
