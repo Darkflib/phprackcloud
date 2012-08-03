@@ -1,1 +1,4 @@
-fork of code at http://code.google.com/p/phprackcloud/ to address a few defects.
+fork and rewrite of code at http://code.google.com/p/phprackcloud/ to support v2 of the rackspace/openstack API
+
+Auth almost complete. Need to clean up the internals and interfaces.
+

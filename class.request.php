@@ -63,7 +63,7 @@ class Request
 
         curl_setopt($c,CURLOPT_URL,$Url);
         curl_setopt($c,CURLOPT_SSL_VERIFYPEER,false);
-        curl_setopt($c,CURLOPT_VERBOSE, true);
+        curl_setopt($c,CURLOPT_VERBOSE, false);
         curl_setopt($c,CURLOPT_RETURNTRANSFER, true);
         
         $Response = curl_exec($c);        

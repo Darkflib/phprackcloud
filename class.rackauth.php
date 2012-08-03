@@ -18,12 +18,14 @@ class RackAuth
     private $XCDNManagementUrl;
     private $XServerManagementUrl;
     private $AuthURL;
-    
-    public function __construct($Username, $APIKey)
+    private $TenantID;
+
+    public function __construct($Username, $APIKey, $TenantID=null)
     {
         $this->Username=$Username;
         $this->APIKey= $APIKey;
-        $this->AuthUrl= "https://auth.api.rackspacecloud.com/v1.0"; //set default to US
+	if (!is_null($TenantID)) $this->TenantID=$TenantID;
+        $this->AuthUrl= "https://identity.api.rackspacecloud.com/v2.0/tokens"; //set default to US
     }
 
     public function setAuthUrl($url) {
@@ -36,10 +38,28 @@ class RackAuth
         if(!$this->Username || !$this->APIKey)
         throw new Exception('Username or Password cannot be empty');
 
-        $Response = Request::post($this->AuthUrl,array("X-Auth-User"=>$this->Username, "X-Auth-Key"=>$this->APIKey),null,true);
-        $Headers = Request::parseHeaders($Response);
+/*
+{
+  "auth": {
+    "passwordCredentials": {
+      "username": "joeuser",
+      "password": "mypass"
+    },
+    "tenantId": "1234"
+  }
+}
+*/
+
+	$post=array('auth' => array('RAX-KSKEY:apiKeyCredentials' => array('username' => $this->Username, 'apiKey' => $this->APIKey )));
+	if (isset($this->TenantID)) $post['auth']['tenantID']=$this->TenantID;
+	$post=(json_encode($post));
+	print_r($post);
+
+        $Response = Request::post($this->AuthUrl,array('Content-Type' => 'application/json', 'Accept' => 'application/json'),$post,true);
+        list($Headers,$Data) = explode("\r\n\r\n",$Response);
         //print_r($Headers);
-        if($Headers)
+	print_r(json_decode($Data));
+        /*if($Headers)
         {
             $this->XAuthToken = $Headers['X-Auth-Token'];
             $this->XStorageToken= $Headers['X-Storage-Token'];
@@ -48,6 +68,7 @@ class RackAuth
             $this->XCDNManagementUrl = $Headers['X-CDN-Management-Url'];
             return true;
         }
+	*/
 
     }
 
