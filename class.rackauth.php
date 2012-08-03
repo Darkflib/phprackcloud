@@ -12,11 +12,10 @@ class RackAuth
 
     private $Username="";
     private $APIKey="";
-    private $XStorageUrl;
-    private $XStorageToken;
-    private $XAuthToken;
-    private $XCDNManagementUrl;
-    private $XServerManagementUrl;
+
+    private $Token;
+    private $ServiceCatalog;
+
     private $AuthURL;
     private $TenantID;
 
@@ -25,7 +24,7 @@ class RackAuth
         $this->Username=$Username;
         $this->APIKey= $APIKey;
 	if (!is_null($TenantID)) $this->TenantID=$TenantID;
-        $this->AuthUrl= "https://identity.api.rackspacecloud.com/v2.0/tokens"; //set default to US
+        $this->AuthUrl= "https://identity.api.rackspacecloud.com/v2.0"; //set default to US
     }
 
     public function setAuthUrl($url) {
@@ -38,38 +37,23 @@ class RackAuth
         if(!$this->Username || !$this->APIKey)
         throw new Exception('Username or Password cannot be empty');
 
-/*
-{
-  "auth": {
-    "passwordCredentials": {
-      "username": "joeuser",
-      "password": "mypass"
-    },
-    "tenantId": "1234"
-  }
-}
-*/
-
 	$post=array('auth' => array('RAX-KSKEY:apiKeyCredentials' => array('username' => $this->Username, 'apiKey' => $this->APIKey )));
 	if (isset($this->TenantID)) $post['auth']['tenantID']=$this->TenantID;
 	$post=(json_encode($post));
 	print_r($post);
+	echo "\n\n";
 
-        $Response = Request::post($this->AuthUrl,array('Content-Type' => 'application/json', 'Accept' => 'application/json'),$post,true);
-        list($Headers,$Data) = explode("\r\n\r\n",$Response);
+        $Response = Request::post($this->AuthUrl.'/tokens',array('Content-Type' => 'application/json', 'Accept' => 'application/json'),$post,true);
+        list($headers,$data) = explode("\r\n\r\n",$Response);
         //print_r($Headers);
-	print_r(json_decode($Data));
-        /*if($Headers)
+	$data=json_decode($data,true);
+        if($data['access'])
         {
-            $this->XAuthToken = $Headers['X-Auth-Token'];
-            $this->XStorageToken= $Headers['X-Storage-Token'];
-            $this->XStorageUrl = $Headers["X-Storage-Url"];
-            $this->XServerManagementUrl = $Headers['X-Server-Management-Url'];
-            $this->XCDNManagementUrl = $Headers['X-CDN-Management-Url'];
+            $this->Token = $data['access']['token'];
+            $this->ServiceCatalog = $data['access']['serviceCatalog'];
             return true;
         }
-	*/
-
+	return false;
     }
 
     function getXAuthToken()
